@@ -15,7 +15,7 @@ import java.util.Optional;
 /**
  * The type Util.
  */
-@SuppressWarnings({"WeakerAccess"})
+@SuppressWarnings({ "WeakerAccess" })
 public final class Util {
     /**
      * Check whether a block is a sign or wall sign type.
@@ -24,10 +24,13 @@ public final class Util {
      * @return true if the block is a sign or wall sign
      */
     public static boolean isSignBlock(Block block) {
+        if (block == null) {
+            return false;
+        }
+
         BlockState blockState = PaperLib.getBlockState(
                 block,
-                true
-        ).getState();
+                true).getState();
 
         return blockState instanceof Sign;
     }
@@ -43,13 +46,18 @@ public final class Util {
      * @return the block state as
      */
     public static <T extends BlockState> Optional<T> getBlockStateAs(Block block, Class<T> blockStateClass) {
-        BlockState blockState = PaperLib.getBlockState(
-                block,
-                false
-        ).getState();
+        if (block == null || blockStateClass == null) {
+            return Optional.empty();
+        }
+
+        BlockState blockState = PaperLib.getBlockState(block, false).getState();
+
+        if (blockState == null) {
+            return Optional.empty();
+        }
 
         if (blockStateClass.isInstance(blockState)) {
-            //noinspection unchecked
+            // noinspection unchecked
             return (Optional<T>) Optional.of(blockState);
         } else {
             return Optional.empty();
@@ -57,7 +65,8 @@ public final class Util {
     }
 
     /**
-     * Compares whether a version string in standard format (dotted decimals) is greater than another.
+     * Compares whether a version string in standard format (dotted decimals) is
+     * greater than another.
      *
      * @param version version string to check
      * @param atLeast minimum expected version
@@ -113,6 +122,10 @@ public final class Util {
      * @return container for the sign if available, null otherwise.
      */
     public static Block chestBlock(Sign sign) {
+        if (sign == null) {
+            return null;
+        }
+
         // is sign attached to a valid vault container?
         Block signBlock = sign.getBlock();
         BlockData blockData = signBlock.getBlockData();
@@ -124,20 +137,28 @@ public final class Util {
         WallSign signData = (WallSign) blockData;
         BlockFace attached = signData.getFacing().getOppositeFace();
 
-        // allow either the block sign is attached to or the block below the sign as chest block. Prefer attached block.
+        // allow either the block sign is attached to or the block below the sign as
+        // chest block. Prefer attached block.
         Block blockAttached = signBlock.getRelative(attached);
         Block blockBelow = signBlock.getRelative(BlockFace.DOWN);
 
-        return isValidContainer(blockAttached.getType()) ? blockAttached : isValidContainer(blockBelow.getType()) ? blockBelow : null;
+        return isValidContainer(blockAttached.getType()) ? blockAttached
+                : isValidContainer(blockBelow.getType()) ? blockBelow : null;
     }
 
     /**
-     * Return whether the given material is a valid container type for Gringotts vaults.
+     * Return whether the given material is a valid container type for Gringotts
+     * vaults.
      *
      * @param material material to check
-     * @return whether the given material is a valid container type for Gringotts vaults
+     * @return whether the given material is a valid container type for Gringotts
+     *         vaults
      */
     public static boolean isValidContainer(Material material) {
+        if (material == null) {
+            return false;
+        }
+
         switch (material) {
             case CHEST:
             case TRAPPED_CHEST:
