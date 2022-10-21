@@ -16,6 +16,7 @@ import org.bukkit.inventory.InventoryHolder;
  * @author jast
  */
 public class AccountChest {
+    public final String           id;
     /**
      * Sign marking the chest as an account chest.
      */
@@ -42,6 +43,7 @@ public class AccountChest {
 
         this.sign    = sign;
         this.account = account;
+        this.id      = String.format("%s_%d_%d_%d", sign.getWorld().getUID(), sign.getX(), sign.getY(), sign.getZ());
     }
 
     /**

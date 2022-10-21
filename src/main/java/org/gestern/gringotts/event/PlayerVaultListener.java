@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.SignChangeEvent;
+import org.gestern.gringotts.Configuration;
 import org.gestern.gringotts.Gringotts;
 import org.gestern.gringotts.Language;
 import org.gestern.gringotts.Permissions;
@@ -16,6 +17,15 @@ import org.gestern.gringotts.accountholder.PlayerAccountHolder;
  * @author jast
  */
 public class PlayerVaultListener implements Listener {
+
+    @EventHandler
+    public void calculateStartBalance(CalculateStartBalanceEvent event) {
+        if (!event.holder.getType().equals("player")) {
+            return;
+        }
+
+        event.startValue = Configuration.CONF.getCurrency().getCentValue(Configuration.CONF.startBalancePlayer);
+    }
 
     @EventHandler
     public void vaultCreated(PlayerVaultCreationEvent event) {

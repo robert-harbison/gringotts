@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.gestern.gringotts.*;
 import org.gestern.gringotts.accountholder.AccountHolder;
-import org.gestern.gringotts.event.VaultCreationEvent;
+import org.gestern.gringotts.event.CalculateStartBalanceEvent;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -117,27 +117,12 @@ public class EBeanDAO implements DAO {
         acc.setOwner(owner.getId());
         acc.setType(owner.getType());
 
-        // TODO this is business logic and should probably be outside of the DAO implementation.
-        // also find a more elegant way of handling different account types
-        double startValue = 0;
-        String type = owner.getType();
+        CalculateStartBalanceEvent startBalanceEvent = new CalculateStartBalanceEvent(account.owner);
 
-        switch (type) {
-            case "player":
-                startValue = Configuration.CONF.startBalancePlayer;
-                break;
-            case "faction":
-                startValue = Configuration.CONF.startBalanceFaction;
-                break;
-            case "town":
-                startValue = Configuration.CONF.startBalanceTown;
-                break;
-            case "nation":
-                startValue = Configuration.CONF.startBalanceNation;
-                break;
-        }
+        Bukkit.getPluginManager().callEvent(startBalanceEvent);
 
-        acc.setCents(Configuration.CONF.getCurrency().getCentValue(startValue));
+        account.add(Configuration.CONF.getCurrency().getCentValue(startBalanceEvent.startValue));
+
         db.save(acc);
 
         return true;
