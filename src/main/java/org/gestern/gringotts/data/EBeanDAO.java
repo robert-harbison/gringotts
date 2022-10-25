@@ -80,6 +80,7 @@ public class EBeanDAO implements DAO {
             return false;
         }
 
+        // If removed, it will break backwards compatibility :(
         if (Objects.equals(owner.getType(), "town") || Objects.equals(owner.getType(), "nation")) {
             if (hasAccount(new AccountHolder() {
                 @Override
@@ -121,7 +122,7 @@ public class EBeanDAO implements DAO {
 
         Bukkit.getPluginManager().callEvent(startBalanceEvent);
 
-        account.add(Configuration.CONF.getCurrency().getCentValue(startBalanceEvent.startValue));
+        account.add(startBalanceEvent.startValue);
 
         db.save(acc);
 

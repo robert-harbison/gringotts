@@ -148,7 +148,7 @@ public class GringottsAccount {
             long remaining = amount + centsStored;
 
             // add currency to account's vaults
-            if (Configuration.CONF.usevaultContainer) {
+            if (Configuration.CONF.useVaultContainer) {
                 for (AccountChest chest : dao.retrieveChests(this)) {
                     remaining -= chest.add(remaining);
 
@@ -175,7 +175,7 @@ public class GringottsAccount {
                         remaining = addToShulkerBox(remaining, player.getInventory());
                     }
                 }
-                if (remaining > 0 && Configuration.CONF.usevaultEnderchest && Permissions.USE_VAULT_ENDERCHEST.isAllowed(player)) {
+                if (remaining > 0 && Configuration.CONF.useVaultEnderChest && Permissions.USE_VAULT_ENDERCHEST.isAllowed(player)) {
                     remaining -= new AccountInventory(player.getEnderChest()).add(remaining);
 
                     if (Configuration.CONF.includeShulkerBoxes && remaining > 0) {
@@ -244,7 +244,7 @@ public class GringottsAccount {
             long remaining = amount;
 
             // Now remove the physical amount left
-            if (Configuration.CONF.usevaultContainer) {
+            if (Configuration.CONF.useVaultContainer) {
                 for (AccountChest chest : dao.retrieveChests(this)) {
                     remaining -= chest.remove(remaining);
 
@@ -270,7 +270,7 @@ public class GringottsAccount {
                         remaining = removeFromShulkerBox(remaining, player.getInventory());
                     }
                 }
-                if (Configuration.CONF.usevaultEnderchest && remaining > 0) {
+                if (Configuration.CONF.useVaultEnderChest && remaining > 0) {
                     remaining -= new AccountInventory(player.getEnderChest()).remove(remaining);
 
                     if (Configuration.CONF.includeShulkerBoxes && remaining > 0) {
@@ -367,7 +367,7 @@ public class GringottsAccount {
             List<AccountChest> chests  = dao.retrieveChests(this);
             long               balance = 0;
 
-            if (Configuration.CONF.usevaultContainer) {
+            if (Configuration.CONF.useVaultContainer) {
                 for (AccountChest chest : chests) {
                     balance += chest.balance();
                 }
@@ -377,7 +377,7 @@ public class GringottsAccount {
             if (playerOpt.isPresent()) {
                 Player player = playerOpt.get();
 
-                if (Configuration.CONF.usevaultEnderchest && Permissions.USE_VAULT_ENDERCHEST.isAllowed(player)) {
+                if (Configuration.CONF.useVaultEnderChest && Permissions.USE_VAULT_ENDERCHEST.isAllowed(player)) {
                     balance += new AccountInventory(player.getEnderChest()).balance();
                 }
             }
@@ -391,7 +391,7 @@ public class GringottsAccount {
         Callable<Long> callMe = () -> {
             List<AccountChest> chests  = dao.retrieveChests(this);
 
-            if (Configuration.CONF.usevaultContainer && index < chests.size() && index >= 0) {
+            if (Configuration.CONF.useVaultContainer && index < chests.size() && index >= 0) {
                 return chests.get(index).balance();
             }
 
@@ -399,7 +399,7 @@ public class GringottsAccount {
             if (playerOpt.isPresent()) {
                 Player player = playerOpt.get();
 
-                if (Configuration.CONF.usevaultEnderchest && Permissions.USE_VAULT_ENDERCHEST.isAllowed(player) && index == -1) {
+                if (Configuration.CONF.useVaultEnderChest && Permissions.USE_VAULT_ENDERCHEST.isAllowed(player) && index == -1) {
                     return new AccountInventory(player.getEnderChest()).balance();
                 }
             }
@@ -413,7 +413,7 @@ public class GringottsAccount {
         Callable<Location> callMe = () -> {
             List<AccountChest> chests  = dao.retrieveChests(this);
 
-            if (Configuration.CONF.usevaultContainer && index < chests.size() && index >= 0) {
+            if (Configuration.CONF.useVaultContainer && index < chests.size() && index >= 0) {
                 return chests.get(index).chestLocation();
             }
             return null;

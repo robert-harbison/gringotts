@@ -7,7 +7,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.gestern.gringotts.*;
 import org.gestern.gringotts.accountholder.AccountHolder;
-import org.gestern.gringotts.event.VaultCreationEvent;
+import org.gestern.gringotts.event.CalculateStartBalanceEvent;
 
 import java.sql.*;
 import java.util.LinkedList;
@@ -313,27 +313,11 @@ public class DerbyDAO implements DAO {
             storeAccount.setString(1, owner.getType());
             storeAccount.setString(2, owner.getId());
 
-            // TODO this is business logic and should probably be outside of the DAO implementation.
-            // also find a more elegant way of handling different account types
-            double value = 0;
-            String type = account.owner.getType();
+            CalculateStartBalanceEvent startBalanceEvent = new CalculateStartBalanceEvent(account.owner);
 
-            switch (type) {
-                case "player":
-                    value = Configuration.CONF.startBalancePlayer;
-                    break;
-                case "faction":
-                    value = Configuration.CONF.startBalanceFaction;
-                    break;
-                case "town":
-                    value = Configuration.CONF.startBalanceTown;
-                    break;
-                case "nation":
-                    value = Configuration.CONF.startBalanceNation;
-                    break;
-            }
+            Bukkit.getPluginManager().callEvent(startBalanceEvent);
 
-            storeAccount.setLong(3, Configuration.CONF.getCurrency().getCentValue(value));
+            storeAccount.setLong(3, startBalanceEvent.startValue);
 
             int updated = storeAccount.executeUpdate();
 

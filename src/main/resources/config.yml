@@ -55,8 +55,6 @@ transactiontax:
 # balance to start an account with (purely virtual)
 startingbalance:
   player: 0
-  town: 0
-  nation: 0
 
 # globally (dis)allow use of vault types
 usevault:

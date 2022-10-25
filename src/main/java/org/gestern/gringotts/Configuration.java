@@ -53,18 +53,15 @@ public enum Configuration {
      * Amount of non-physical money to give to new players
      */
     // An alternative to flooding new players' inventories with currency items
-    public long startBalancePlayer = 0;
-    public long startBalanceFaction = 0;
-    public long startBalanceTown = 0;
-    public long startBalanceNation = 0;
+    public long   startBalancePlayer = 0;
     /**
      * Use container vaults (chest, dispenser, furnace).
      */
-    public boolean usevaultContainer = true;
+    public boolean useVaultContainer = true;
     /**
      * Use ender chests as player vaults.
      */
-    public boolean usevaultEnderchest = true;
+    public boolean useVaultEnderChest = true;
     /**
      * Balance command shows vault balance.
      */
@@ -131,12 +128,12 @@ public enum Configuration {
         if (Util.versionAtLeast(version, "1.3.1")) {
             log.info("Found Bukkit version: " + version + ". All features enabled.");
 
-            CONF.usevaultEnderchest = savedConfig.getBoolean("usevault.enderchest", true);
+            CONF.useVaultEnderChest = savedConfig.getBoolean("usevault.enderchest", true);
 
         } else {
             log.info("Found Bukkit version: " + version + ". Disabling 1.3+ features.");
 
-            CONF.usevaultEnderchest = false;
+            CONF.useVaultEnderChest = false;
         }
 
         // legacy parameter sets digits to 0 (false) or 2 (true)
@@ -161,11 +158,8 @@ public enum Configuration {
         CONF.transactionTaxRate = savedConfig.getDouble("transactiontax.rate", 0);
 
         CONF.startBalancePlayer  = savedConfig.getLong("startingbalance.player", 0);
-        CONF.startBalanceFaction = savedConfig.getLong("startingbalance.faction", 0);
-        CONF.startBalanceTown    = savedConfig.getLong("startingbalance.town", 0);
-        CONF.startBalanceNation  = savedConfig.getLong("startingbalance.nation", 0);
 
-        CONF.usevaultContainer   = savedConfig.getBoolean("usevault.container", true);
+        CONF.useVaultContainer   = savedConfig.getBoolean("usevault.container", true);
         CONF.includeShulkerBoxes = savedConfig.getBoolean("usevault.include-shulker-boxes", true);
 
         CONF.balanceShowInventory = savedConfig.getBoolean("balance.show-inventory", true);
