@@ -59,6 +59,8 @@ public class MoneyExecutor extends GringottsAbstractExecutor {
                     return true;
                 } catch (NumberFormatException ignored) {
                     return false;
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+                    return false;
                 }
             }
             case "deposit": {
@@ -70,6 +72,8 @@ public class MoneyExecutor extends GringottsAbstractExecutor {
                     return true;
                 } catch (NumberFormatException ignored) {
                     return false;
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+                    return false;
                 }
             }
             case "send": {
@@ -80,6 +84,8 @@ public class MoneyExecutor extends GringottsAbstractExecutor {
                     return pay(player, value, args[1]);
                 } catch (NumberFormatException ignored) {
                     return false;
+                } catch (ArrayIndexOutOfBoundsException ignored) {
+                    return false;
                 }
             }
             case "pay": {
@@ -89,6 +95,8 @@ public class MoneyExecutor extends GringottsAbstractExecutor {
                     // money pay <amount> <player>
                     return pay(player, value, args[2]);
                 } catch (NumberFormatException ignored) {
+                    return false;
+                } catch (ArrayIndexOutOfBoundsException ignored) {
                     return false;
                 }
             }
