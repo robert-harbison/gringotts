@@ -2,12 +2,16 @@ package org.gestern.gringotts;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.MemoryConfiguration;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.material.MaterialData;
 import org.gestern.gringotts.currency.GringottsCurrency;
 
 import java.util.*;
@@ -190,51 +194,7 @@ public enum Configuration {
                     //noinspection unchecked
                     denomConf.addDefaults((Map<String, Object>) denomEntry);
 
-                    String materialName = denomConf.getString("material");
-
-                    ItemStack denomType = itemByName(materialName);
-
-                    if (denomConf.contains("damage")) {
-                        short damage = (short) denomConf.getInt("damage"); // returns 0 when path is unset
-                        ItemMeta meta = denomType.getItemMeta();
-                        if (meta != null) {
-                            ((Damageable) meta).setDamage(damage);
-                            denomType.setItemMeta(meta);
-                        }
-                    }
-
-                    ItemMeta meta = denomType.getItemMeta();
-
-                    if (meta == null) {
-                        continue;
-                    }
-
-                    String name = denomConf.getString("displayname");
-
-                    if (name != null && !name.isEmpty()) {
-                        meta.setDisplayName(Util.translateColors(name));
-                    }
-
-                    List<String> lore = denomConf.isString("lore") ?
-                            // allow users to configure a single lore string
-                            Collections.singletonList(denomConf.getString("lore")) :
-                            denomConf.getStringList("lore");
-
-                    if (!lore.isEmpty()) {
-                        List<String> loreTranslated = new ArrayList<>(lore.size());
-
-                        for (String l : lore) {
-                            loreTranslated.add(Util.translateColors(l));
-                        }
-
-                        meta.setLore(loreTranslated);
-                    }
-
-                    if (denomConf.contains("custom_model_data") && denomConf.isInt("custom_model_data")) {
-                        meta.setCustomModelData(denomConf.getInt("custom_model_data"));
-                    }
-
-                    denomType.setItemMeta(meta);
+                    ItemStack denomType = denomConf.getItemStack("item");
 
                     double value = denomConf.getDouble("value");
 
@@ -251,6 +211,7 @@ public enum Configuration {
                 } catch (GringottsConfigurationException e) {
                     throw e;
                 } catch (Exception e) {
+                    e.printStackTrace();
                     throw new GringottsConfigurationException("Encountered an error parsing currency. Please check " +
                             "your Gringotts configuration. Error was: " + e.getMessage(), e);
                 }
@@ -326,7 +287,7 @@ public enum Configuration {
 
             } catch (Exception e) {
                 throw new GringottsConfigurationException(
-                        "Encountered an error parsing currency. Please check your Gringotts configuration. Error was: "
+                        "Encountered an error parsing legacy currency. Please check your Gringotts configuration. Error was: "
                                 + e.getMessage(),
                         e
                 );
